@@ -1,10 +1,73 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
 
+<head>
+  <title>A1_FloraHe</title>
+</head>
+
+<body>
+
 <script>
   console.log(d3); // test if d3 is loaded
+  var dataArray = [20, 35, 45];
+  var ployDataArray = [{x:900,y:35},{x:960,y:120},{x:900,y:120},{x:840,y:120},{x:900,y:35},];
+
   // Add an SVG
+  var svg = d3.select("body").append("svg").attr("height","100%").attr("width","100%");
+
   // Add Rectangles
+  svg.selectAll("rect")
+         .data(dataArray)
+         .enter().append("rect")
+                     .attr("height",function(d,i){ return d*3;})
+                     .attr("width","50")
+                     .attr("x",function(d,i){ return (i+1)*60;})
+                     .attr("y",function(d,i){ return 200 - d*3;})
+                     .attr("fill","blue");
+
   // Add Circles
+  var newX = 400;
+  var rainbow = d3.scaleSequential(d3.interpolateRainbow).domain([0,10]);
+  svg.selectAll("circle")
+         .data(dataArray)
+         .enter().append("circle")
+                     .attr("cx",newX)
+                     .attr("cy",function(d,i){ return (i+1)*60;})
+                     .attr("r","40")
+                     .attr("fill",function(d,i){ return rainbow(i);})
+                     .attr("stroke","white");
+
   // Add Lines
+  var newX = 550;
+  svg.selectAll("line")
+        .data(dataArray)
+        .enter().append("line")
+                  .attr("x1",newX)
+                  .attr("y1",function(d,i){ return 80+(i*20); })
+                  .attr("x2",function(d){ return newX+(d*5); })
+                  .attr("y2",function(d,i){ return 80+(i*20); })
+                  .attr("stroke","black")
+                  .attr("stroke-width","3");
+
   // Add Polygons
+  var newX = 900;
+  var line = d3.line()
+                 .x(function(d,i){ return d.x ;})
+                 .y(function(d,i){ return d.y ;});
+
+  var ployFirst = svg.append("g");
+  ployFirst.append("path")
+              .attr("d",line(ployDataArray))
+              .attr("stroke","red")
+              .attr("stroke-width","2")
+              .attr("fill","none");
+
+  var ploySecond = svg.append("g").attr("transform","translate(0,90)");
+  ploySecond.append("path")
+              .attr("d",line(ployDataArray))
+              .attr("stroke","none")
+              .attr("stroke-width","2")
+              .attr("fill","red");
+
 </script>
+
+</body>
